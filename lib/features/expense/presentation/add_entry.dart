@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:camera/camera.dart';
 import 'package:expense_bud/config/constants.dart';
 import 'package:expense_bud/config/theme.dart';
 import 'package:expense_bud/core/domain/entities/expense.dart';
@@ -15,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../camera.dart';
+
 class AddEntryPage extends StatefulWidget {
   const AddEntryPage({Key? key}) : super(key: key);
 
@@ -29,6 +32,12 @@ class _AddEntryPageState extends State<AddEntryPage>
   ExpenseCategoryItem _categoryItem = categoryItems()[0];
 
   int amount = 0;
+  // late CameraDescription firstCamera;
+
+  getCameras() async {
+    final cameras = await availableCameras();
+    return cameras.first;
+  }
 
   @override
   void initState() {
@@ -78,6 +87,18 @@ class _AddEntryPageState extends State<AddEntryPage>
                           PhosphorIcons.x,
                           color: Colors.black,
                         ),
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          PhosphorIcons.camera,
+                          color: Colors.black,
+                        ),
+                        onPressed: () async {
+                          context.push(TakePictureScreen(
+                            // Pass the appropriate camera to the TakePictureScreen widget.
+                            camera: await getCameras(),
+                          ));
+                        },
                       ),
                       Text(
                         'Add Transaction',
